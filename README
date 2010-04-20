@@ -1,3 +1,9 @@
+From The Simpsons Movie (2007)
+Bart Simpson: Boy, you made it! But how?
+Santa's Little Helper: [subtitled] I did things no dog should. They will haunt me forever.
+Bart Simpson: I love you too
+
+
 .                                      .....D$7$DM7.. .  .                    .M
 ............................................M$$$$$$$OM?........................M
 . .          .. DMMM..                 ......87$$$$$$$77M=.                    M
@@ -86,7 +92,7 @@ It's dumb just like the famous dog, but it may surprise you.
 Example
 =======
 
-Once loaded just call evailable methods.
+Once loaded just call available methods.  See  http://github.com/konung/santas_little_helper/blob/master/lib/santas_little_helper.rb for details.
 
 
 Copyright (c) 2010 [Nick Gorbikoff] www.gorbikoff.com, released under the MIT license
