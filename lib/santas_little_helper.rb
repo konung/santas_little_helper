@@ -3,17 +3,19 @@
 # SYSTEM WIDE
 
 # Determines if Windows platform or not. This will match all windows systems known to me (author). If you find otherwise let me know please.
+
+#Works on Windows XP, 2003, 7 running Ruby 1.8.6 & 1.8.7 installed from RubyInstaller
 def windows?
   # Can't match for just 'win' cause it will match darwin as well.
   (/win32|mswin|mingw/).match(RUBY_PLATFORM) ? true : false
 end
 
-# Works on Debian and Ubuntu, don't have anything else to test on.
+# Works on Debian Sarge & Lenny and Ubuntu 9.10 running REE 1.8.7, don't have anything else to test on.
 def linux?
   (/linux/).match(RUBY_PLATFORM) ? true : false
 end
 
-# Works on my MacBook Pro, don't have anything else to test on,
+# Works on my MacBook Pro OS 10.6 running Ruby 1.8.7 and rvm version of 1.9.1 , don't have anything else to test on,
 def mac?
   (/darwin/).match(RUBY_PLATFORM) ? true : false
 end
