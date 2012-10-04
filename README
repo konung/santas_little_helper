@@ -94,5 +94,28 @@ Example
 
 Once loaded just call available methods.  See  http://github.com/konung/santas_little_helper/blob/master/lib/santas_little_helper.rb for details.
 
+Rails 3 & Gemfile
+=================
+
+Sometimes if you are developing in rails on windows and deploying to linux and platform or implementaion lookups don't work and you are tired of parsing RUBY_PLATFORM, you can do this
+
+in Gemfile at the top require:
+
+require "santas_little_helper"
+gem "santas_little_helper"
+
+then you can do this:
+
+if jruby? 
+  gem 'activerecord-jdbcmysql-adapter'
+  gem 'jdbc-mysql'
+  gem 'jruby-openssl'
+  gem 'therubyrhino', :group => :assets
+  gem 'puma'
+else
+  gem 'mysql2', '0.3.11'
+  gem  'activerecord-mysql2-adapter'
+end
+
 
 Copyright (c) 2010 [Nick Gorbikoff] www.gorbikoff.com, released under the MIT license
