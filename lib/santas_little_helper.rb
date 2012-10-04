@@ -44,7 +44,7 @@ def version_1_9?
   (/^1.9./).match(RUBY_VERSION) ? true : false
 end
 
-def verson_1_8?
+def version_1_8?
   (/^1.8./).match(RUBY_VERSION) ? true : false
 end
 
