@@ -39,6 +39,14 @@ def mri?
 end
 
 
+# In case ruby ever reaches version 19 :-) or some 2.19 :-) only matching 1.9 at the begining of the line 
+def version_1_9?
+  (/^1.9./).match(RUBY_VERSION) ? true : false
+end
+
+def verson_1_8?
+  (/^1.8./).match(RUBY_VERSION) ? true : false
+end
 
 
 # When something is True / False and I can to_s it, why can't I to_i it?
