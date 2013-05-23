@@ -4,9 +4,9 @@
 
 # Determines if Windows platform or not. This will match all windows systems known to me (author). If you find otherwise let me know please.
 # There is one pitful - if you are running on jruby - it returns "java", as supposedly it it is platform independent. So if you are checking
-# for os and running jruby - it will return false, since it won't match. You should use it in conjunction with jruby? & mri? if you are 
+# for os and running jruby - it will return false, since it won't match. You should use it in conjunction with jruby? & mri? if you are
 # unticipating that to be a problem. I'm not defining java? as it may cause problems with jruby potentially.
-# Not really worried about maglev & rubinius & ironruby right now - as they are not really mutiplatform, not as widespread and I can't test for 
+# Not really worried about maglev & rubinius & ironruby right now - as they are not really mutiplatform, not as widespread and I can't test for
 # them right now.
 
 # Works on Windows XP, 2003, 7 running Ruby 1.8.6 & 1.8.7 installed from RubyInstaller
@@ -32,14 +32,14 @@ end
 # Works for jruby 1.7.0.rc1 and jruby 1.6.3 on windows (7 & xp)
 def jruby?
   (/java/).match(RUBY_PLATFORM) ? true : false
-end  
+end
 
 def mri?
   (/i386|x86_64|x86/).match(RUBY_PLATFORM) ? true : false
 end
 
 
-# In case ruby ever reaches version 19 :-) or some 2.19 :-) only matching 1.9 at the begining of the line 
+# In case ruby ever reaches version 19 :-) or some 2.19 :-) only matching 1.9 at the begining of the line
 def version_1_9?
   (/^1.9./).match(RUBY_VERSION) ? true : false
 end
@@ -58,16 +58,16 @@ class TrueClass
   def to_i
     1
   end
-  
+
   # Humanize. to_s returns "true"
   def to_h
     "yes"
   end
-  
+
   # Really I need to spell it out to you?
   def to_teenager
     "Yeah, yeah. Here you go. Did you get what you came for? Now disappear."
-  end  
+  end
 end
 class FalseClass
   # Rails conventions for boolean / tinyint
@@ -81,7 +81,7 @@ class FalseClass
   # Little obnoxious teenager.
   def to_teenager
     "Can't you leave me alone? I don't have anything!"
-  end   
+  end
 end
 class NilClass
   # Since in if/else nil is interpreted as false, return same as false.
@@ -93,9 +93,15 @@ class NilClass
   def to_h
     ""
   end
-  
+
   # A very rude teenager nihilist.
   def to_teenager
     "Zip! Nada! Babkis! Nothing to see here! Get out of my room!"
-  end   
+  end
+end
+class String
+  # See http://stackoverflow.com/questions/8119970/string-true-and-false-to-boolean
+  def to_boolean(s)
+    !!(s =~ /^(true|t|yes|y|1)$/i)
+  end
 end
