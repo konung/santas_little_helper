@@ -9,5 +9,5 @@ Gem::Specification.new do |s|
   s.email       = 'nick.gorbikoff@gmail.com'
   s.files       = ["lib/santas_little_helper.rb"]
   s.homepage    =
-    'http://rubygems.org/gems/santas_little_helper'
+    'https://github.com/konung/santas_little_helper'
 end
