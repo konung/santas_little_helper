@@ -101,7 +101,7 @@ class NilClass
 end
 class String
   # See http://stackoverflow.com/questions/8119970/string-true-and-false-to-boolean
-  def to_boolean(s)
-    !!(s =~ /^(true|t|yes|y|1)$/i)
+  def to_boolean
+    !!(self =~ /^(true|t|yes|y|1)$/i)
   end
 end
