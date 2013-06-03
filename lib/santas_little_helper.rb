@@ -34,7 +34,7 @@ end
 
 def ruby_platform?(os='')
   # Takes a string or a method like so platform?(:windows)
-  os.to_s.match(platform) ? true : false
+  os.to_s.match(ruby_platform) ? true : false
 end
 
 # These are just aliases for convinience, I really doubt somebody would use them System Wide on an object for any other purpose.
@@ -62,10 +62,10 @@ def ruby_implementation?(written_in='')
   ruby_platform?(written_in)
 end
 def jruby?
-  implementation?(:jruby)
+  ruby_implementation?(:jruby)
 end
 def mri?
-  implementation?(:mri)
+  ruby_implementation?(:mri)
 end
 
 

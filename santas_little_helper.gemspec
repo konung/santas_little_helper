@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'santas_little_helper'
-  s.version     = '3.0.1'
+  s.version     = '3.0.3'
   s.date        = '2013-06-03'
   s.summary     = "It's dumb just like the famous dog, but it may surprise you. It modifies core classes, use at your own risk!"
   s.description = "This is a collection of useful little snippets that I used through out various projects. If there is something you would like to add either check it out and modify it the way you want or let me know and I might add it here.
