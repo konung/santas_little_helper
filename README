@@ -137,8 +137,8 @@ Be realy careful about using this GEM - it shivs String, True, False & Nil. May 
 # RUBY_VERSION: ruby_version, ruby_version?('version_to_check')
 # Using Refinements now we can do this ( no more monkey patching like in older versions). So this now only works in version 200 and up.
 # For older monkey patching you would have to use older version of the gem
-# TrueClass, FalseClass, NilClass : to_human, to_i, to_teenager
-# String, Integer and Numeric: to_boolean
+# TrueClass, FalseClass, NilClass , String, Fixnum and Float: to_human, to_i, to_teenager
+# String, Fixnum & Float: to_boolean
 #   using SantasLittleHelper
 
 Copyright (c) 2010 [Nick Gorbikoff] www.gorbikoff.com, released under the MIT license

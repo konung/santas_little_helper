@@ -22,11 +22,6 @@ def ruby_platform
     when /darwin/
       # Works on my MacBook Pro OS 10.6 running Ruby 1.8.7 and .rbenv version of 1.9.3 & 2.0.0 , don't have anything else to test on,
       'mac'
-    when /java/
-      'jruby'
-    when /i386|x86_64|x86/
-      # I'm actually not sure what rubinius or maglev or other implementions would return. I don't rubies, other than mri or jruby.
-      'mri'
     else
       nil
   end
@@ -56,10 +51,18 @@ end
 # At this point it's essentially just an alias fro platform & platform?, since it queries RUBY_PLATFORM, but this may change in the future
 # In the future I may start using RUBY_ENGINE
 def ruby_implementation
-  ruby_platform
+  case RUBY_ENGINE
+    when /java/
+      'jruby'
+    when /ruby/
+      # I'm actually not sure what rubinius or maglev or other implementions would return. I don't use rubies, other than mri or jruby.
+      'mri'
+    else
+      nil
+  end
 end
 def ruby_implementation?(written_in='')
-  ruby_platform?(written_in)
+  written_in.to_s.match(ruby_implementation) ? true : false
 end
 def jruby?
   ruby_implementation?(:jruby)
@@ -83,110 +86,107 @@ def ruby_version?(version_to_check)
 end
 
 
-if ruby_version >= 200
-  module SantasLittleHelper
-
-    # When something is True / False and I can to_s it, why can't I to_i it?
-    # There is actually a good theoretical reason, but in real world it really helps if you can output true or false
-    # as an int when you are sending soap request to a client, whose api requires it as 1 or 0, or humanize to "yes" & "no" form
-    # since users apperently are not good at understaning what true or false means in some context.
-    # Also why this can be done at a presentation level, when you are trying to create a meta method to handle complex objects
-    # this is much more convinient and readable.
-    # For an alternative solution check out http://www.ruby-forum.com/topic/206789#new
 
 
-    refine TrueClass do
-      # Rails conventions for boolean / tinyint
-      def to_i
-        1
-      end
+# When something is True / False and I can to_s it, why can't I to_i it?
+# There is actually a good theoretical reason, but in real world it really helps if you can output true or false
+# as an int when you are sending soap request to a client, whose api requires it as 1 or 0, or humanize to "yes" & "no" form
+# since users apperently are not good at understaning what true or false means in some context.
+# Also why this can be done at a presentation level, when you are trying to create a meta method to handle complex objects
+# this is much more convinient and readable.
+# For an alternative solution check out http://www.ruby-forum.com/topic/206789#new
 
-      # Humanize. to_s returns "true"
-      def to_human
-        "yes"
-      end
 
-      # Really?! Do I need to spell it out to you?
-      def to_teenager
-        "Yeah, yeah. Here you go. Did you get what you came for? Now disappear."
-      end
+class TrueClass
+  # Rails conventions for boolean / tinyint
+  def to_i
+    1
+  end
+
+  # Humanize. to_s returns "true"
+  def to_human
+    "yes"
+  end
+
+  # Really?! Do I need to spell it out to you?
+  def to_teenager
+    "Yeah, yeah. Here you go. Did you get what you came for? Now disappear."
+  end
+end
+class FalseClass
+  # Rails conventions for boolean / tinyint
+  def to_i
+    0
+  end
+
+  # Humanize. to_s returns "false".
+  def to_human
+    "no"
+  end
+
+  # Little obnoxious teenager.
+  def to_teenager
+    "No means no!!! Can't you leave me alone?"
+  end
+end
+class NilClass
+  # Since in if/else nil is interpreted as false, return same as false.
+  def to_i
+    0
+  end
+
+  # Humanize. to_s returns "" as well, this is really to be consistent with other classes.
+  def to_human
+    ""
+  end
+
+  # A very rude teenager nihilist.
+  def to_teenager
+    "Zip! Nada! Babkis! Nothing to see here! Get out of my room!"
+  end
+end
+class String
+  # See http://stackoverflow.com/questions/8119970/string-true-and-false-to-boolean
+  # In this context empty string is nil which is the same as false
+  def to_boolean
+    !!(self =~ /^(true|t|yes|y|1)$/i)
+  end
+  def to_human
+    self.to_s
+  end
+  def to_teenager
+    "What did you say to me? What? #{self.to_human}"
+  end
+end
+class Fixnum
+  # Same idea as string: 1 or any number (positive) is true, 0 or negative number is false
+  def to_boolean
+    if self <= 0
+      false
+    else
+      true
     end
-    refine FalseClass do
-      # Rails conventions for boolean / tinyint
-      def to_i
-        0
-      end
-
-      # Humanize. to_s returns "false".
-      def to_human
-        "no"
-      end
-
-      # Little obnoxious teenager.
-      def to_teenager
-        "No means no!!! Can't you leave me alone?"
-      end
+  end
+  def to_human
+    self.to_s
+  end
+  def to_teenager
+    "I'm not good with whole numbers! I don't like math! Take your #{self.to_human} and go bother someone else!"
+  end
+end
+class Float
+  # Same idea as string: 1 or any number (positive) is true, 0 or negative number is false
+  def to_boolean
+    if self <= 0
+      false
+    else
+      true
     end
-    refine NilClass do
-      # Since in if/else nil is interpreted as false, return same as false.
-      def to_i
-        0
-      end
-
-      # Humanize. to_s returns "" as well, this is really to be consistent with other classes.
-      def to_human
-        ""
-      end
-
-      # A very rude teenager nihilist.
-      def to_teenager
-        "Zip! Nada! Babkis! Nothing to see here! Get out of my room!"
-      end
-    end
-    refine String do
-      # See http://stackoverflow.com/questions/8119970/string-true-and-false-to-boolean
-      # In this context empty string is nil which is the same as false
-      def to_boolean
-        !!(self =~ /^(true|t|yes|y|1)$/i)
-      end
-      def to_human
-        self.to_s
-      end
-      def to_teenager
-        "What did you say to me? What? #{self.to_human}"
-      end
-    end
-    refine Integer do
-      # Same idea as string: 1 or any number (positive) is true, 0 or negative number is false
-      def to_boolean
-        if self <= 0
-          false
-        else
-          true
-        end
-      end
-      def to_human
-        self.to_s
-      end
-      def to_teenager
-        "I'm not good with whole numbers! I don't like math! Take your #{self.to_human} and go bother someone else!"
-      end
-    end
-    refine Numeric do
-      # Same idea as string: 1 or any number (positive) is true, 0 or negative number is false
-      def to_boolean
-        if self <= 0
-          false
-        else
-          true
-        end
-      end
-      def to_human
-        self.to_s
-      end
-      def to_teenager
-        "I told you I'm not good with whole numbers, what makes you think, I'm good with with fractions like this?  #{self.to_human}"
-      end
-    end
+  end
+  def to_human
+    self.to_s
+  end
+  def to_teenager
+    "I told you I'm not good with whole numbers, what makes you think, I'm good with with fractions like this?  #{self.to_human}"
   end
 end
