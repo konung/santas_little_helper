@@ -9,20 +9,43 @@
 # Not really worried about maglev & rubinius & ironruby right now - as they are not really mutiplatform, not as widespread and I can't test for
 # them right now.
 
-# Works on Windows XP, 2003, 7 running Ruby 1.8.6 & 1.8.7 installed from RubyInstaller
+
+def ruby_platform
+  case RUBY_PLATFORM
+    when /win32|mswin|mingw/
+      # Works on Windows XP, 2003, 7, 8 running Ruby 1.8.6 & 1.8.7, 1.9.2, 1.9.3 & 2.0.0 installed from RubyInstaller
+      # Can't match for just 'win' cause it will match darwin as well.
+      'windows'
+    when /linux/
+      # Works on Debian Sarge, Lenny & Wheezy and Ubuntu 9.10 running REE 1.8.7 & MRI 2.0.0 32-bit & 64-bit, don't have anything else to test on.
+      'linux'
+    when /darwin/
+      # Works on my MacBook Pro OS 10.6 running Ruby 1.8.7 and .rbenv version of 1.9.3 & 2.0.0 , don't have anything else to test on,
+      'mac'
+    when /java/
+      'jruby'
+    when /i386|x86_64|x86/
+      # I'm actually not sure what rubinius or maglev or other implementions would return. I don't rubies, other than mri or jruby.
+      'mri'
+    else
+      nil
+  end
+end
+
+def ruby_platform?(os='')
+  # Takes a string or a method like so platform?(:windows)
+  os.to_s.match(platform) ? true : false
+end
+
+# These are just aliases for convinience, I really doubt somebody would use them System Wide on an object for any other purpose.
 def windows?
-  # Can't match for just 'win' cause it will match darwin as well.
-  (/win32|mswin|mingw/).match(RUBY_PLATFORM) ? true : false
+  ruby_platform?(:windows)
 end
-
-# Works on Debian Sarge & Lenny and Ubuntu 9.10 running REE 1.8.7, don't have anything else to test on.
 def linux?
-  (/linux/).match(RUBY_PLATFORM) ? true : false
+  ruby_platform?(:linux)
 end
-
-# Works on my MacBook Pro OS 10.6 running Ruby 1.8.7 and rvm version of 1.9.1 , don't have anything else to test on,
 def mac?
-  (/darwin/).match(RUBY_PLATFORM) ? true : false
+  ruby_platform?(:mac)
 end
 
 
@@ -30,27 +53,43 @@ end
 # I test and deploy some of the project on jruby - this makes it easier to customize my gemfiles.
 # Works for ruby 1.8.7 & 1.9.3 & 1.9.2 on windows( 7 & xp) & linux ( debian Lenny)  using rubyinstaller for windows and using mri ruby buillt from source for linux
 # Works for jruby 1.7.0.rc1 and jruby 1.6.3 on windows (7 & xp)
-def jruby?
-  (/java/).match(RUBY_PLATFORM) ? true : false
+# At this point it's essentially just an alias fro platform & platform?, since it queries RUBY_PLATFORM, but this may change in the future
+# In the future I may start using RUBY_ENGINE
+def ruby_implementation
+  ruby_platform
 end
-
+def ruby_implementation?(written_in='')
+  ruby_platform?(written_in)
+end
+def jruby?
+  implementation?(:jruby)
+end
 def mri?
-  (/i386|x86_64|x86/).match(RUBY_PLATFORM) ? true : false
+  implementation?(:mri)
 end
 
 
 # In case ruby ever reaches version 19 :-) or some 2.19 :-) only matching 1.9 at the begining of the line
-def version_1_9?
-  (/^1.9./).match(RUBY_VERSION) ? true : false
+# Returns an integer for easy version comparison 200 > 187 ( Version two is newer :-) )
+# if ruby_version > 187 , install new version of the gem.
+def ruby_version
+  RUBY_VERSION.gsub(/[^0-9]/,'').to_i
+end
+def ruby_version?(version)
+  # Be careful - this will only match up to minor release. It will not match patch versions.
+  # You can ask it things in the following formats ruby_version?(1), ruby_version?(1.8), ruby_version?('200')
+  version = version.to_s.gsub(/[^0-9]/,'')
+  RUBY_VERSION.gsub(/[^0-9]/,'')[0..(version.size-1)] == version[0..(version.size-1)]
 end
 
-def version_1_8?
-  (/^1.8./).match(RUBY_VERSION) ? true : false
-end
 
 
 # When something is True / False and I can to_s it, why can't I to_i it?
-# There is actually a good theoretical reason, but in real world it really helps if you can output true or false as an int when you are sending soap request to a client, whose api requires it as 1 or 0, or humanize to "yes" & "no" form.
+# There is actually a good theoretical reason, but in real world it really helps if you can output true or false
+# as an int when you are sending soap request to a client, whose api requires it as 1 or 0, or humanize to "yes" & "no" form
+# since users apperently are not good at understaning what true or false means in some context.
+# Also why this can be done at a presentation level, when you are trying to create a meta method to handle complex objects
+# this is much more convinient and readable.
 # For an alternative solution check out http://www.ruby-forum.com/topic/206789#new
 
 class TrueClass
@@ -60,11 +99,11 @@ class TrueClass
   end
 
   # Humanize. to_s returns "true"
-  def to_h
+  def to_human
     "yes"
   end
 
-  # Really I need to spell it out to you?
+  # Really?! Do I need to spell it out to you?
   def to_teenager
     "Yeah, yeah. Here you go. Did you get what you came for? Now disappear."
   end
@@ -74,13 +113,15 @@ class FalseClass
   def to_i
     0
   end
+
   # Humanize. to_s returns "false".
-  def to_h
+  def to_human
     "no"
   end
+
   # Little obnoxious teenager.
   def to_teenager
-    "Can't you leave me alone? I don't have anything!"
+    "No means no!!! Can't you leave me alone?"
   end
 end
 class NilClass
@@ -90,7 +131,7 @@ class NilClass
   end
 
   # Humanize. to_s returns "" as well, this is really to be consistent with other classes.
-  def to_h
+  def to_human
     ""
   end
 
@@ -101,7 +142,46 @@ class NilClass
 end
 class String
   # See http://stackoverflow.com/questions/8119970/string-true-and-false-to-boolean
+  # In this context empty string is nil which is the same as false
   def to_boolean
     !!(self =~ /^(true|t|yes|y|1)$/i)
+  end
+  def to_human
+    self.to_s
+  end
+  def to_teenager
+    "What did you say to me? What? #{self.to_human}"
+  end
+end
+def Integer
+  # Same idea as string: 1 or any number (positive) is true, 0 or negative number is false
+  def to_boolean
+    if self =< 0
+      false
+    else
+      true
+    end
+  end
+  def to_human
+    self.to_s
+  end
+  def to_teenager
+    "I'm not good with whole numbers! I don't like math! Take your #{self.to_human} and go bother someone else!"
+  end
+end
+def Float
+  # Same idea as string: 1 or any number (positive) is true, 0 or negative number is false
+  def to_boolean
+    if self =< 0
+      false
+    else
+      true
+    end
+  end
+  def to_human
+    self.to_s
+  end
+  def to_teenager
+    "I told you I'm not good with whole numbers, what makes you think, I'm good with with fractions like this?  #{self.to_human}"
   end
 end
