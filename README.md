@@ -5,6 +5,83 @@ Santa's Little Helper: [subtitled] I did things no dog should. They will haunt m
 Bart Simpson: I love you too
 </pre>
 
+
+
+SantasLittleHelper
+==================
+
+Pretty self explanatory plugin.
+This is a collection of useful little snippets that I used through out various projects. If there is something you would like to add either check it out and modify it the way you want or let me know and I might add it here.
+It's dumb just like the famous dog, but it may surprise you. So be really careful and check out source to see what it does.
+
+
+<b>P.S.</b>
+I jsut disvored a gem called zucker which provides some of the fanctionality that I use. So check it out if you are interested.
+
+
+
+
+Example
+=======
+
+Once loaded just call available methods.  See  http://github.com/konung/santas_little_helper/blob/master/lib/santas_little_helper.rb for details.
+
+
+Refactoring
+===========
+
+As of version 1.0 some of the methods are being refactored.
+To keep it more consistent and to avoid conflicts with Ruby defaults, all custom to_h are converted to .to_human. to_h means to Hash in ruby parlence - so this really is to avoid confusion.
+Also refactored some of the system wide methods to make it easier for cover more OS's in the future.
+
+
+
+Rails 3 & Gemfile
+=================
+
+Sometimes if you are developing in rails on windows and deploying to linux and platform or implementaion lookups don't work and you are tired of parsing RUBY_PLATFORM, you can do this
+
+in Gemfile at the top require:
+```ruby
+
+require "santas_little_helper"
+gem "santas_little_helper"
+
+#then you can do this:
+
+if jruby?
+  gem 'activerecord-jdbcmysql-adapter'
+  gem 'jdbc-mysql'
+  gem 'jruby-openssl'
+  gem 'therubyrhino', :group => :assets
+  gem 'puma'
+else
+  gem 'mysql2', '0.3.11'
+  gem  'activerecord-mysql2-adapter'
+end
+```
+
+CAREFUL!!!!
+===========
+
+Be realy careful about using this GEM - it shivs String, True, False & Nil. May add helpful methods to other classes. Please read source for a an up to day list of helpful methods:
+
+
+- RUBY_PLATFORM: ruby_platform, ruby_platform?(:os_to_check), windows?, linux?, mac?
+- RUBY_PLATFORM: ruby_implemention, ruby_implemention?(:written_in), jruby?, mri?
+- RUBY_VERSION: ruby_version, ruby_version?('version_to_check')
+-  ~~Using Refinements now we can do this ( no more monkey patching like in older versions). So this now only works in version 200 and up.~~
+- ~~For older monkey patching you would have to use older version of the gem~~
+- Reverting back to monkeypatching since Refinements only work in main context for now. Feature is experimental,so I'm droping it for now.
+- TrueClass, FalseClass, NilClass , String, Fixnum and Float: to_human, to_i, to_teenager
+- String, Fixnum & Float: to_boolean
+
+Copyright (c) 2010 [Nick Gorbikoff] www.gorbikoff.com, released under the MIT license
+
+
+
+
+
 ```
                                       .....D$7$DM7.. .  .                    .
                                           ..M$$$$$$$OM?........................
@@ -78,74 +155,3 @@ MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
 
 
 ```
-
-
-SantasLittleHelper
-==================
-
-Pretty self explanatory plugin.
-This is a collection of useful little snippets that I used through out various projects. If there is something you would like to add either check it out and modify it the way you want or let me know and I might add it here.
-It's dumb just like the famous dog, but it may surprise you. So be really careful and check out source to see what it does.
-
-
-<b>P.S.</b>
-I jsut disvored a gem called zucker which provides some of the fanctionality that I use. So check it out if you are interested.
-
-
-
-
-Example
-=======
-
-Once loaded just call available methods.  See  http://github.com/konung/santas_little_helper/blob/master/lib/santas_little_helper.rb for details.
-
-
-Refactoring
-===========
-
-As of version 1.0 some of the methods are being refactored.
-To keep it more consistent and to avoid conflicts with Ruby defaults, all custom to_h are converted to .to_human. to_h means to Hash in ruby parlence - so this really is to avoid confusion.
-Also refactored some of the system wide methods to make it easier for cover more OS's in the future.
-
-
-
-Rails 3 & Gemfile
-=================
-
-Sometimes if you are developing in rails on windows and deploying to linux and platform or implementaion lookups don't work and you are tired of parsing RUBY_PLATFORM, you can do this
-
-in Gemfile at the top require:
-```ruby
-
-require "santas_little_helper"
-gem "santas_little_helper"
-
-#then you can do this:
-
-if jruby?
-  gem 'activerecord-jdbcmysql-adapter'
-  gem 'jdbc-mysql'
-  gem 'jruby-openssl'
-  gem 'therubyrhino', :group => :assets
-  gem 'puma'
-else
-  gem 'mysql2', '0.3.11'
-  gem  'activerecord-mysql2-adapter'
-end
-```
-
-CAREFUL!!!!
-===========
-
-Be realy careful about using this GEM - it shivs String, True, False & Nil. May add helpful methods to other classes. Please read source for a an up to day list of helpful methods:
-
-
-- RUBY_PLATFORM: ruby_platform, ruby_platform?(:os_to_check), windows?, linux?, mac?
-- RUBY_PLATFORM: ruby_implemention, ruby_implemention?(:written_in), jruby?, mri?
-- RUBY_VERSION: ruby_version, ruby_version?('version_to_check')
-- Using Refinements now we can do this ( no more monkey patching like in older versions). So this now only works in version 200 and up.
-- For older monkey patching you would have to use older version of the gem
-- TrueClass, FalseClass, NilClass , String, Fixnum and Float: to_human, to_i, to_teenager
-- String, Fixnum & Float: to_boolean
-
-Copyright (c) 2010 [Nick Gorbikoff] www.gorbikoff.com, released under the MIT license
