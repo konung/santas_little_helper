@@ -1,9 +1,11 @@
 From The Simpsons Movie (2007)
+<pre>
 Bart Simpson: Boy, you made it! But how?
 Santa's Little Helper: [subtitled] I did things no dog should. They will haunt me forever.
 Bart Simpson: I love you too
+</pre>
 
-
+```
                                       .....D$7$DM7.. .  .                    .
                                           ..M$$$$$$$OM?........................
             .. DMMM..                 ......87$$$$$$$77M=.
@@ -75,7 +77,7 @@ IMDNN...  .  N77$$$$DO$$$$7M7$$$$87$$$$7N$$$$$$$$$$$$$$$$$7I..       :.
 MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
 
 
-
+```
 
 
 SantasLittleHelper
@@ -83,8 +85,11 @@ SantasLittleHelper
 
 Pretty self explanatory plugin.
 This is a collection of useful little snippets that I used through out various projects. If there is something you would like to add either check it out and modify it the way you want or let me know and I might add it here.
+It's dumb just like the famous dog, but it may surprise you. So be really careful and check out source to see what it does.
 
-It's dumb just like the famous dog, but it may surprise you.
+
+<b>P.S.</b>
+I jsut disvored a gem called zucker which provides some of the fanctionality that I use. So check it out if you are interested.
 
 
 
@@ -103,17 +108,19 @@ To keep it more consistent and to avoid conflicts with Ruby defaults, all custom
 Also refactored some of the system wide methods to make it easier for cover more OS's in the future.
 
 
+
 Rails 3 & Gemfile
 =================
 
 Sometimes if you are developing in rails on windows and deploying to linux and platform or implementaion lookups don't work and you are tired of parsing RUBY_PLATFORM, you can do this
 
 in Gemfile at the top require:
+```ruby
 
 require "santas_little_helper"
 gem "santas_little_helper"
 
-then you can do this:
+#then you can do this:
 
 if jruby?
   gem 'activerecord-jdbcmysql-adapter'
@@ -125,6 +132,7 @@ else
   gem 'mysql2', '0.3.11'
   gem  'activerecord-mysql2-adapter'
 end
+```
 
 CAREFUL!!!!
 ===========
@@ -132,13 +140,12 @@ CAREFUL!!!!
 Be realy careful about using this GEM - it shivs String, True, False & Nil. May add helpful methods to other classes. Please read source for a an up to day list of helpful methods:
 
 
-# RUBY_PLATFORM: ruby_platform, ruby_platform?(:os_to_check), windows?, linux?, mac?
-# RUBY_PLATFORM: ruby_implemention, ruby_implemention?(:written_in), jruby?, mri?
-# RUBY_VERSION: ruby_version, ruby_version?('version_to_check')
-# Using Refinements now we can do this ( no more monkey patching like in older versions). So this now only works in version 200 and up.
-# For older monkey patching you would have to use older version of the gem
-# TrueClass, FalseClass, NilClass , String, Fixnum and Float: to_human, to_i, to_teenager
-# String, Fixnum & Float: to_boolean
-#   using SantasLittleHelper
+- RUBY_PLATFORM: ruby_platform, ruby_platform?(:os_to_check), windows?, linux?, mac?
+- RUBY_PLATFORM: ruby_implemention, ruby_implemention?(:written_in), jruby?, mri?
+- RUBY_VERSION: ruby_version, ruby_version?('version_to_check')
+- Using Refinements now we can do this ( no more monkey patching like in older versions). So this now only works in version 200 and up.
+- For older monkey patching you would have to use older version of the gem
+- TrueClass, FalseClass, NilClass , String, Fixnum and Float: to_human, to_i, to_teenager
+- String, Fixnum & Float: to_boolean
 
 Copyright (c) 2010 [Nick Gorbikoff] www.gorbikoff.com, released under the MIT license
